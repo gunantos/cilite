@@ -7,7 +7,15 @@ interface DBInterface {
      */
     public function connected();
     /**
-     * get info website return object
+     * get  website return object
      */
-    public function getInfoWebsite() : object;
+    public function getServer() : mixed;
+    /**
+     * get database
+     */
+    public function getDB() : mixed;
+    /**
+     * get info 
+     */
+    public function getInfo() : mixed;
 }
