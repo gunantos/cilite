@@ -43,6 +43,8 @@ class Autoload extends AutoloadConfig
     public $psr4 = [
         APP_NAMESPACE => APPPATH, // For custom app namespace
         'Config'      => APPPATH . 'Config',
+        '\appkita\cilite\API' => APPPATH.'Controllers'.DIRECTORY_SEPARATOR.'Api',
+        '\appkita\cilite\ADMIN' => APPPATH.'Controllers'.DIRECTORY_SEPARATOR.'Admin'
     ];
 
     /**
