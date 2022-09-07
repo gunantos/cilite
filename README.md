@@ -14,7 +14,7 @@ Mazer is an Admin Dashboard Template that can help you develop faster. Made with
 More information can be found at the [official site](git@github.com:zuramai/mazer.git)
 
 ## Contributing
-Please follow [Contributing Guide]() before Contributing
+Please follow [Contributing Guide](https://github.com/gunantos/cilite/blob/main/CONTRIBUTING.md) before Contributing
 
 ## License
 CILITE is under [MIT License](https://github.com/gunantos/cilite/blob/main/LICENSE.md)
