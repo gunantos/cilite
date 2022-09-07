@@ -15,6 +15,6 @@ $routes->get('/', 'Home::index');
 if (is_file(APPPATH . 'Config/' . ENVIRONMENT . '/Routes.php')) {
     require APPPATH . 'Config/' . ENVIRONMENT . '/Routes.php';
 }
-if (is_file(APPPATH . 'ThirdParty/cilite/MyRouter.php')) {
-    require APPPATH . 'ThirdParty/cilite/MyRouter.php';
+if (is_file(APPPATH . 'ThirdParty/appkita/cilite/Config/Routers.php')) {
+    require APPPATH . 'ThirdParty/appkita/cilite/Config/Routers.php';
 }
