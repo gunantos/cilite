@@ -1,4 +1,4 @@
-# CILITE
+<h1 align="center">Mazer Dashboard</h1>
 CILITE adalah CMS mengunakan CodeIgniter 4, dilengkapi dengan api dan admin yang dapat mengelola website anda
 
 
