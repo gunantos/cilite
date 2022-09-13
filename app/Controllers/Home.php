@@ -2,7 +2,7 @@
 
 namespace App\Controllers;
 
-class Home extends BaseController
+class Home extends \appkita\cilite\Controllers\BaseController
 {
     public function index()
     {

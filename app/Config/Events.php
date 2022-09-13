@@ -21,7 +21,6 @@ use CodeIgniter\Exceptions\FrameworkException;
  * Example:
  *      Events::on('create', [$myInstance, 'myMethod']);
  */
-
 Events::on('pre_system', static function () {
     if (ENVIRONMENT !== 'testing') {
         if (ini_get('zlib.output_compression')) {
@@ -45,4 +44,5 @@ Events::on('pre_system', static function () {
         Events::on('DBQuery', 'CodeIgniter\Debug\Toolbar\Collectors\Database::collect');
         Services::toolbar()->respond();
     }
+    
 });

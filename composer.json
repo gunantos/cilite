@@ -7,7 +7,8 @@
     "require": {
         "php": "^7.4 || ^8.0",
         "codeigniter4/framework": "^4.0",
-        "mongodb/mongodb": "^1.12"
+        "mongodb/mongodb": "^1.12",
+        "appkita/phpauth": "^2.1"
     },
     "require-dev": {
         "fakerphp/faker": "^1.9",

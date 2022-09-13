@@ -13,3 +13,9 @@
  *
  * @see: https://codeigniter4.github.io/CodeIgniter4/
  */
+if (! defined('CILITEPATH')) {
+    /**
+     * @var Paths $paths
+     */
+    define('CILITEPATH', realpath(APPPATH.'ThirdParty'.DIRECTORY_SEPARATOR.'appkita'.DIRECTORY_SEPARATOR.'cilite') . DIRECTORY_SEPARATOR);
+}

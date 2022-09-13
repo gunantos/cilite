@@ -1,6 +1,16 @@
 <h1 align="center">CILITE</h1>
 CILITE adalah CMS mengunakan CodeIgniter 4, dilengkapi dengan api dan admin yang dapat mengelola website anda
 
+## How to Use
+- add common in ``app/common.php``
+    ```php
+    if (! defined('CILITEPATH')) {
+        define('CILITEPATH', realpath(APPPATH.'ThirdParty/appkita/cilite') . DIRECTORY_SEPARATOR);
+    }
+    ```
+- first
+- second
+- third
 
 
 ## What is CodeIgniter?
