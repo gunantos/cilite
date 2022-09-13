@@ -2,13 +2,18 @@
 CILITE adalah CMS mengunakan CodeIgniter 4, dilengkapi dengan api dan admin yang dapat mengelola website anda
 
 ## How to Use
-- add common in ``app/common.php``
+- add in ``app/common.php``
     ```php
     if (! defined('CILITEPATH')) {
         define('CILITEPATH', realpath(APPPATH.'ThirdParty/appkita/cilite') . DIRECTORY_SEPARATOR);
     }
     ```
-- first
+- in ``app/Config/Routers.php``
+    ```php
+    #$routes->get('/', 'Home::index');
+    
+    #or you can create your home Controllers in app/Controllers with extends \appkita\ilite\Controllers\Home
+    ```
 - second
 - third
 
