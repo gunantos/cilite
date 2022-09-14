@@ -91,4 +91,12 @@ define('EVENT_PRIORITY_NORMAL', 100);
 /**
  * @deprecated Use \CodeIgniter\Events\Events::PRIORITY_HIGH instead.
  */
-define('EVENT_PRIORITY_HIGH', 10);
+$base_url = $_SERVER['HTTP_HOST'];
+$base_url .= str_replace(basename($_SERVER['SCRIPT_NAME']), '',   $_SERVER['SCRIPT_NAME']);
+
+$protocol = ((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on') || isset($_ENV['FORCE_HTTPS'])) ? 'https://' : 'http://';
+if (empty($base_url)) {
+    $base_url = 'localhost:8080';
+}
+$base_url = $protocol . $base_url;
+defined('BASEURL') || define('BASEURL', $base_url);

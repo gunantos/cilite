@@ -23,6 +23,8 @@ class Filters extends BaseConfig
         'honeypot'      => Honeypot::class,
         'invalidchars'  => InvalidChars::class,
         'secureheaders' => SecureHeaders::class,
+        'adminFilter'    => \appkita\cilite\Filters\AdminFilter::class,
+        'apiFilter'    => \appkita\cilite\Filters\ApiFilter::class,
     ];
 
     /**
@@ -68,5 +70,6 @@ class Filters extends BaseConfig
      *
      * @var array
      */
-    public $filters = [];
+     public $filters = [
+    ];
 }

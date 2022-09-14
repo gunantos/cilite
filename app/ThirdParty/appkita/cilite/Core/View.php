@@ -17,6 +17,37 @@ class View extends ViewCI
         $this->viewPath_cilite = (dirname(__DIR__)) .DIRECTORY_SEPARATOR. 'Views'.DIRECTORY_SEPARATOR;
     }
 
+    protected function buildmenu_from_map($map, $item = '',  $res=[]) {
+        foreach($map as $key => $val) {
+            $key = \str_replace('\\', '', $key);
+            if (is_array($val)) {
+                $item .= '/' . $key;
+                $res = $this->buildmenu_from_map($val, $item, $res);
+            } else {
+                $exts = \explode('.', $val);
+                $ext  = array_pop($exts);
+                if ($ext == 'php') {
+                    $item = \ltrim($item, '/');
+                    $hasil = $item .'/' . $val;
+                }
+                if (!empty($hasil)) {
+                    array_push($res, $hasil);
+                }
+            }
+        }
+        return $res;
+    }
+
+    protected function get_controller_file(string $path, string $name) : string{
+       # helper('filesystem');
+       # $map = \directory_map($path);
+       # $list_file = $this->buildmenu_from_map($map);
+       # for ($i = 0; $i < sizeof($list_file); $i++) {
+
+       # }
+        return $path.$name;
+    }
+
      public function render(string $view, ?array $options = null, ?bool $saveData = null): string
     {
         $this->renderVars['start'] = microtime(true);
@@ -44,10 +75,11 @@ class View extends ViewCI
             }
         }
 
-        $this->renderVars['file'] = $this->viewPath_cilite .$this->renderVars['view'];
+        
+        $this->renderVars['file'] = $this->get_controller_file($this->viewPath, $this->renderVars['view']);
 
         if (! is_file($this->renderVars['file'])) {
-           $this->renderVars['file'] = $this->viewPath . $this->renderVars['view'];
+           $this->renderVars['file'] =  $this->get_controller_file($this->viewPath_cilite, $this->renderVars['view']);
 
             if (! is_file($this->renderVars['file'])) {
                 $this->renderVars['file'] = $this->loader->locateFile($this->renderVars['view'], 'Views', empty($fileExt) ? 'php' : $fileExt);

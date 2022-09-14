@@ -8,14 +8,32 @@ CILITE adalah CMS mengunakan CodeIgniter 4, dilengkapi dengan api dan admin yang
         define('CILITEPATH', realpath(APPPATH.'ThirdParty/appkita/cilite') . DIRECTORY_SEPARATOR);
     }
     ```
-- in ``app/Config/Routers.php``
+- add in ``app/Config/Routers.php``
     ```php
-    #$routes->get('/', 'Home::index');
-    
-    #or you can create your home Controllers in app/Controllers with extends \appkita\ilite\Controllers\Home
+    $cfg = new \appkita\cilite\Config\Cilite();
+    $autorouter = new \appkita\cilite\Libraries\Autorouter($cfg, $routes);
+    $autorouter->run();
     ```
-- second
-- third
+- add alias in ``app/Config/Filters``
+```php
+     public $aliases = [
+        ...
+        'adminFilter'    => \appkita\cilite\Filters\AdminFilter::class,
+        'apiFilter'    => \appkita\cilite\Filters\ApiFilter::class,
+     ];
+```
+- add contant in ``app/Config/Constants.php``
+    ```php
+    $protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off' ? 'https://'.$_SERVER['HTTP_HOST'] : 'http://'.$_SERVER['HTTP_HOST']."".str_replace(basename($_SERVER['SCRIPT_NAME']), "", $_SERVER['SCRIPT_NAME']);
+    defined('BASEURL') || define('BASEURL',$protocol);
+    ```
+- modifi ``app/config/App.php``
+```php
+...
+public $baseURL = BASEURL;
+public $indexPage = '';
+...
+```
 
 
 ## What is CodeIgniter?
@@ -24,9 +42,8 @@ CodeIgniter is a PHP full-stack web framework that is light, fast, flexible and 
 More information can be found at the [official site](http://codeigniter.com).
 
 ## Admin Template
-Admin template is mazer by (Saugi)[https://saugi.me/]. 
-Mazer is an Admin Dashboard Template that can help you develop faster. Made with Bootstrap 5. No jQuery dependency.
-More information can be found at the [official site](git@github.com:zuramai/mazer.git)
+
+- (Adminator Admin Dashboar)[https://github.com/puikinsh/Adminator-admin-dashboard]
 
 ## Contributing
 Please follow [Contributing Guide](https://github.com/gunantos/cilite/blob/main/CONTRIBUTING.md) before Contributing

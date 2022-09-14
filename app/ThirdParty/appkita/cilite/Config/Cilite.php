@@ -4,6 +4,7 @@ namespace appkita\cilite\Config;
 
 class Cilite extends \CodeIgniter\Config\BaseConfig
 {
+    public $appName = 'APP KITA';
     /**
      * set admin web
      * @var bool $admin default true
@@ -36,6 +37,10 @@ class Cilite extends \CodeIgniter\Config\BaseConfig
      * @var array $api
      */
     public $items_api = [];
-
+    /**
+     * set isLogin paramter
+     * @var string $isLogin
+     */
+    public $isLogin = 'isLogin';
     
 }

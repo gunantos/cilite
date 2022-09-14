@@ -19,3 +19,15 @@ if (! defined('CILITEPATH')) {
      */
     define('CILITEPATH', realpath(APPPATH.'ThirdParty'.DIRECTORY_SEPARATOR.'appkita'.DIRECTORY_SEPARATOR.'cilite') . DIRECTORY_SEPARATOR);
 }
+
+if (! function_exists('config')) {
+    /**
+     * More simple way of getting config instances from Factories
+     *
+     * @return mixed
+     */
+    function config(string $name, bool $getShared = true)
+    {
+        return \CodeIgniter\Config\Factories::config($name, ['getShared' => $getShared]);
+    }
+}

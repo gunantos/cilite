@@ -5,9 +5,11 @@ use \CodeIgniter\Config\BaseService;
 use \appkita\cilite\Core\View;
 use \appkita\cilite\Core\Parser;
 use \Config\Services as AppServices;
-
+use \CodeIgniter\Filters\Filters as CIFilter;
 class Services extends BaseService
 {
+
+    
      /**
      * The Parser is a simple template parser.
      *

@@ -2,7 +2,94 @@
 namespace appkita\cilite\Libraries;
 
 class Autorouter {
-    public static function router_from_path($r, $current_dir, $path, $namespace) {
+    protected $host = null;
+    protected $config;
+    protected $routes;
+
+    public function __construct(\appkita\cilite\Config\Cilite $config, \CodeIgniter\Router\RouteCollection $routes) {
+        if (isset($_SERVER['HTTP_HOST'])){
+            $this->host = strtolower($_SERVER['HTTP_HOST']);
+        }
+        $this->config = $config;
+        $this->routes = $routes;
+        
+        
+        $this->routes->setDefaultNamespace('App\Controllers');
+        $this->routes->setDefaultController('Home');
+        $this->routes->setDefaultMethod('index');
+        $this->routes->setTranslateURIDashes(true);
+        $this->routes->get('/assets-admin/(:any)', '\\appkita\\cilite\\Controllers\\AssetsAdmin::index/$1', ['priority'=>1]);
+        $this->routes->set404Override(function() {
+            echo view('404.php');
+        });
+        defined('APPNAME') || define('APPNAME', $this->config->appName);
+    }
+
+    /**
+     * function get host domain
+     * @var string $domain
+     */
+    public function getBaseHost(string $domain) {
+        $domain = strtolower(str_replace('http://', '', $domain));
+        $domain = str_replace('https://', '', $domain);
+        $domain = str_replace('www.', '', $domain);
+        return $domain;
+    }
+
+    public function run() {
+        $mdl = new \appkita\cilite\Models\WebsiteModel();
+        $cek = $mdl->where('domain_website', $this->host)->first();
+            
+        if (!empty($cek)) {
+            if (!empty($cek['path_website'])) {
+                $namespace = '\\'. APP_NAMESPACE .'\\Controllers\\'. $cek['path_website'];
+            } else{
+                $namespace = '\\appkita\\cilite\\Controllers\\DefaultWebsite';
+            }
+            $login_class = '\\appkita\\cilite\\Controllers\\Login';
+            $class_login_default = '\\'. APP_NAMESPACE .'\\Controllers\\Login';
+            if (class_exists($class_login_default)) {
+                $cls_login = new $class_login_default();
+                if (\method_exists($cls_login, 'index')) {
+                    $login_class = $class_login_default;
+                }
+            }
+            $this->routes = $this->routes->setAutoRoute(false);
+            $this->routes->setDefaultNamespace($namespace);
+            $this->routes->setDefaultController('Home');
+            $this->routes->setDefaultMethod('index');
+            $this->routes->get('/', $namespace.'\\'. $this->routes->getDefaultController(). '::'. $this->routes->getDefaultMethod());
+            $this->routes->get('/login', $login_class.'::index');
+            $this->routes->post('/login', $login_class.'::auth');
+            $this->generate_router();
+        }
+         return $this->routes;
+    }
+
+    public function generate_router() {
+        if ($this->config->admin) {
+            if (!empty($this->config->domain_admin)) {
+                $domain_admin = $this->getBaseHost($this->config->domain_admin);
+                if ($domain_admin == $host) {
+                    $this->routes = $this->build_router('', $this->config->items_admin, 'resource');
+                }
+            }else{
+                $this->routes = $this->build_router('Admin', $this->config->items_admin, 'resource');
+            }
+        }
+        if ($this->config->api) {
+            if (!empty($this->config->domain_api)) {
+                $domain_api = $this->getBaseHost($this->config->domain_api);
+                if ($domain_api == $host) {
+                    $this->routes = $this->build_router('', $this->config->items_api, 'get');
+                }
+            }else{
+                $this->routes = $this->build_router('Api', $this->config->items_api, 'get');
+            }
+        }
+    }
+
+    public function router_from_path($current_dir, $path, $namespace) {
         $files = directory_map($current_dir.ucfirst($path));
         foreach($files as $file) {
             $fs = explode('.', $file);
@@ -10,25 +97,24 @@ class Autorouter {
             $f = $fs[0];
             if ($ext == 'php') {
                 if($path == 'api') {
-                    if (strtolower($f) == 'index') {
-                        $r->resource('api', $f, ['namespace'=>$namespace]);
+                    if (strtolower($f) == 'home') {
+                        $this->routes->resource('api', $f, ['namespace'=>$namespace, 'filter'=>'apiFilter']);
                     }
-                    $r->resource('api/'. strtolower($f), $f, ['namespace'=>$namespace]);
+                    $this->routes->resource('api/'. strtolower($f), $f, ['namespace'=>$namespace, 'filter'=>'apiFilter']);
                 } else {
-                    if (strtolower($f) == 'index') {
-                        $r->get('admin', $f.'::index' , ['namespace'=>$namespace]);
+                    $ff = \preg_replace('/[0-9]+/', '', $f); 
+                    if (strtolower($ff) == 'home') {
+                        $this->routes->get('admin', $f.'::index' , ['namespace'=>$namespace, 'filter'=>'adminFilter']);
                     }
-                    $r->get('admin/'. strtolower($f), $f.'::index' , ['namespace'=>$namespace]);
+                    $this->routes->get('admin/'. strtolower($ff), $f.'::index' , ['namespace'=>$namespace, 'filter'=>'adminFilter']);
                 }
             }
         }
-        return $r;
+        return $this;
     }
 
-    public static function build_router(\CodeIgniter\Router\RouteCollection $r, string $uri, array $items = [], string $default_method = null, string $path = null, string $namespace=null) {
-        if (empty($namespace)) {
-            $namespace = 'appkita\\cilite\\Controllers\\'. $uri;
-        }
+    public function build_router(string $uri, array $items = [], string $default_method = null, string $path = null) {
+        $namespace = 'appkita\\cilite\\Controllers\\'. $uri;
         if (empty($default_method)) {
             $method = 'resource';
         }
@@ -64,17 +150,17 @@ class Autorouter {
                 $_uri = strtolower($_uri);
 
                 if ($_uri == 'index') {
-                    $r->{$method}($uri, $val);
+                     $this->routes->{$method}($uri, $val);
                 }
-                $r->{$method}($uri.'/'.$_uri, $val);
+                $this->routes->{$method}($uri.'/'.$_uri, $val);
             }
         } else {
             helper('filesystem');
             $ci_dir = APPPATH .'Controllers';
             $namespace_ci= APP_NAMESPACE .'\\Controllers\\'. ucfirst($uri);
-            $r = Autorouter::router_from_path($r, $path, $uri, $namespace);
-            $r = Autorouter::router_from_path($r, $ci_dir, $uri, $namespace_ci);
+            $this->router_from_path($path, $uri, $namespace);
+            $this->router_from_path($ci_dir, $uri, $namespace_ci);
         }
-        return $r;
+        return $this;
     }
 }
